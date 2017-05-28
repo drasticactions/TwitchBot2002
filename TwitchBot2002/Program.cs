@@ -25,6 +25,7 @@ namespace TwitchBot2002
             synth.SetOutputToDefaultAudioDevice();
 
             var authTokens = System.IO.File.ReadLines("tokens.txt").ToArray();
+            // Bot Username, API Key, Channel to join.
             var client = new TwitchClient(new ConnectionCredentials(authTokens[0], authTokens[1]), "");
             client.OnMessageReceived += Client_OnMessageReceived;
             client.Connect();
