@@ -99,6 +99,7 @@ namespace TwitchBot2002
             // Bot Username, API Key, Channel to join.
             var client = new TwitchClient(new ConnectionCredentials(authTokens[0], authTokens[1]), authTokens[2]);
             client.OnMessageReceived += Client_OnMessageReceived;
+            client.OnChatCommandReceived += Client_OnChatCommandReceived;
             client.Connect();
             Console.WriteLine("Client Started! Use CTRL-Z to quit");
             while(true)
@@ -141,7 +142,7 @@ namespace TwitchBot2002
 
         private static async void Client_OnMessageReceived(object sender, TwitchLib.Events.Client.OnMessageReceivedArgs e)
         {
-            if (e.ChatMessage.Bits < 0) return;
+            if (e.ChatMessage.Bits <= 0) return;
 
             // voice message!
             Console.WriteLine($"Voice: {e.ChatMessage.Username} ({e.ChatMessage.Bits}): {e.ChatMessage.Message}");
@@ -150,6 +151,14 @@ namespace TwitchBot2002
             if (key.Key != ConsoleKey.Y) return;
             Console.WriteLine(Environment.NewLine);
             Speak(e.ChatMessage.Message);
+        }
+
+        private static async void Client_OnChatCommandReceived(object sender, TwitchLib.Events.Client.OnChatCommandReceivedArgs e)
+        {
+            if (e.Command.ChatMessage.IsBroadcaster)
+            {
+                if 
+            }
         }
     }
 }
