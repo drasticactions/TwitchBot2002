@@ -141,6 +141,8 @@ namespace TwitchBot2002
 
         private static async void Client_OnMessageReceived(object sender, TwitchLib.Events.Client.OnMessageReceivedArgs e)
         {
+            if (e.ChatMessage.Bits < 0) return;
+
             // voice message!
             Console.WriteLine($"Voice: {e.ChatMessage.Username} ({e.ChatMessage.Bits}): {e.ChatMessage.Message}");
             Console.WriteLine("Allow? y/n");
