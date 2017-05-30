@@ -12,6 +12,7 @@ using System.IO;
 using System.Speech.AudioFormat;
 using NAudio.Wave;
 using NAudio.CoreAudioApi;
+using System.Threading;
 
 namespace TwitchBot2002
 {
@@ -110,6 +111,8 @@ namespace TwitchBot2002
                 try
                 {
                     var num = Convert.ToInt32(numString);
+                    Console.WriteLine($"Entered {num}, wait 5 seconds");
+                    Thread.Sleep(5000);
                     Speak(messages[num - 1]);
                 }
                 catch (Exception)
@@ -154,7 +157,7 @@ namespace TwitchBot2002
 
         private static async void Client_OnMessageReceived(object sender, TwitchLib.Events.Client.OnMessageReceivedArgs e)
         {
-            if (e.ChatMessage.Bits <= 0) return;
+            //if (e.ChatMessage.Bits <= 0) return;
 
             messages.Add(e.ChatMessage.Message);
             // voice message!
