@@ -97,14 +97,13 @@ namespace TwitchBot2002
             var authTokens = File.ReadLines("tokens.txt").ToArray();
 
             // Bot Username, API Key, Channel to join.
-            var client = new TwitchClient(new ConnectionCredentials(authTokens[0], authTokens[1]), "");
+            var client = new TwitchClient(new ConnectionCredentials(authTokens[0], authTokens[1]), authTokens[2]);
             client.OnMessageReceived += Client_OnMessageReceived;
             client.Connect();
             Console.WriteLine("Client Started! Use CTRL-Z to quit");
             while(true)
             {
-                var userMessage = Console.ReadLine();
-                Speak(userMessage);
+
             }
         }
 
@@ -142,16 +141,13 @@ namespace TwitchBot2002
 
         private static async void Client_OnMessageReceived(object sender, TwitchLib.Events.Client.OnMessageReceivedArgs e)
         {
-            if (e.ChatMessage.Bits > 0)
-            {
-                // voice message!
-                Console.WriteLine($"Voice: {e.ChatMessage.Username} ({e.ChatMessage.Bits}: {e.ChatMessage.Message}");
-                //Console.WriteLine("Allow? y/n");
-                //var key = Console.ReadKey();
-                //if (key.Key != ConsoleKey.Y) return;
-                Speak(e.ChatMessage.Message);
-                Console.WriteLine($"Voice: {e.ChatMessage.Username}: {e.ChatMessage.Message}");
-            }
+            // voice message!
+            Console.WriteLine($"Voice: {e.ChatMessage.Username} ({e.ChatMessage.Bits}): {e.ChatMessage.Message}");
+            Console.WriteLine("Allow? y/n");
+            var key = Console.ReadKey();
+            if (key.Key != ConsoleKey.Y) return;
+            Console.WriteLine(Environment.NewLine);
+            Speak(e.ChatMessage.Message);
         }
     }
 }
