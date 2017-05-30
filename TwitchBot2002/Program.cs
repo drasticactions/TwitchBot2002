@@ -29,6 +29,7 @@ namespace TwitchBot2002
         static WaveInEvent waveIn;
         static WaveOut waveOut;
 
+        static List<string> messages = new List<string>();
         static void Main(string[] args)
         {
             MainAsync(args).GetAwaiter().GetResult();
@@ -102,9 +103,20 @@ namespace TwitchBot2002
             client.OnChatCommandReceived += Client_OnChatCommandReceived;
             client.Connect();
             Console.WriteLine("Client Started! Use CTRL-Z to quit");
+            Console.WriteLine("Enter Message Number");
             while(true)
             {
-
+                var numString = Console.ReadLine();
+                try
+                {
+                    var num = Convert.ToInt32(numString);
+                    Speak(messages[num - 1]);
+                }
+                catch (Exception)
+                {
+                    // TODO: Show error message
+                    // Bigger TODO: Will probably never do that.
+                }
             }
         }
 
@@ -144,20 +156,22 @@ namespace TwitchBot2002
         {
             if (e.ChatMessage.Bits <= 0) return;
 
+            messages.Add(e.ChatMessage.Message);
             // voice message!
-            Console.WriteLine($"Voice: {e.ChatMessage.Username} ({e.ChatMessage.Bits}): {e.ChatMessage.Message}");
-            Console.WriteLine("Allow? y/n");
-            var key = Console.ReadKey();
-            if (key.Key != ConsoleKey.Y) return;
-            Console.WriteLine(Environment.NewLine);
-            Speak(e.ChatMessage.Message);
+            Console.WriteLine($"New Message #{messages.Count}: {e.ChatMessage.Username} ({e.ChatMessage.Bits}): {e.ChatMessage.Message}");
         }
 
         private static async void Client_OnChatCommandReceived(object sender, TwitchLib.Events.Client.OnChatCommandReceivedArgs e)
         {
             if (e.Command.ChatMessage.IsBroadcaster)
             {
-                if 
+                switch(e.Command.Command)
+                {
+                    case "speak":
+                        Console.WriteLine($"Broadcaster override! {e.Command.ArgumentsAsString}");
+                        Speak(e.Command.ArgumentsAsString);
+                        break;
+                }
             }
         }
     }
